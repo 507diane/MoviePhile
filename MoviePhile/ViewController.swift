@@ -19,7 +19,8 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var name: UITextField!
     
-    @IBOutlet weak var genre: UITextField!
+    @IBOutlet weak var genre: UIPickerView!
+    
     
     @IBOutlet weak var year: UITextField!
     
@@ -88,7 +89,7 @@ class ViewController: UIViewController {
         
         var error: NSError?
         
-        var objects = managedObjectContext?,excecuteFetchRequest(request, error: &error)
+        var objects = managedObjectContext?, excecuteFetchRequest(request, error: &error)
         
         if let results = objects {
             if results.count > 0 {
