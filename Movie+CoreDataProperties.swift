@@ -14,7 +14,7 @@ import CoreData
 
 extension Movie {
 
-    @NSManaged var title: String?
+    @NSManaged var name: String?
     @NSManaged var genre: String?
     @NSManaged var year: String?
     @NSManaged var location: String?

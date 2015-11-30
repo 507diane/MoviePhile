@@ -19,7 +19,18 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var name: UITextField!
     
-    @IBOutlet weak var genre: UIPickerView!
+    @IBOutlet weak var genre: UIPickerView! {
+        
+        var pickerData: [String] = [String]()
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            // Do any additional setup after loading the view, typically from a nib.
+            
+            // Input data into the Array:
+            pickerData = ["Drama", "Romance", "Mystery", "Action", "Thriller", "Independant"]
+        }
+    }
     
     
     @IBOutlet weak var year: UITextField!
@@ -79,12 +90,12 @@ class ViewController: UIViewController {
     @IBAction func btnSearch(sender: UIButton) {
         
         let entityDescription =
-        NSEntityDescription.entityForName("Movie", inManagedObjectContext: managedObjectContext!)
+        NSEntityDescription.entityForName("Movie", inManagedObjectContext: managedObjectContext)
         
         let request = NSFetchRequest()
         request.entity = entityDescription
         
-        let pred = NSPredicate(format: "(name = %@)", name.text)
+        let pred = NSPredicate(format: "(name = %@)", name.text!)
         request.predicate = pred
         
         var error: NSError?
@@ -99,7 +110,7 @@ class ViewController: UIViewController {
                 genre.text = match.valueForKey("genre") as String
                 year.text = match.valueForKey("year") as String
                 location.text = match.valueForKey("year") as String
-                status.text = match.valueForKey("status") as String
+                info.text = match.valueForKey("status") as String
                 
             } else {
                 status.text = "No Match"

@@ -10,7 +10,22 @@ import UIKit
 import CoreData
 import Foundation
 
-class MovieTableViewController: UITableViewController {
+class MovieTableViewController: UITableViewController,UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate {
+    
+    var filteredTableData = [NSManagedObject]()
+    var resultSearchController = UISearchController()
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController)
+    {
+        filteredTableData.removeAll(keepCapacity: false)
+        //search for field in CoreData
+        let searchPredicate = NSPredicate(format: "name CONTAINS[c] %@", searchController.searchBar.text!)
+        let array = (movieArray as NSArray).filteredArrayUsingPredicate(searchPredicate)
+        filteredTableData = array as! [NSManagedObject]
+        
+        self.tableView.reloadData()
+    }
+
     
     var movieArray = [NSManagedObject]()
     
@@ -53,13 +68,30 @@ class MovieTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.resultSearchController.delegate = self
+        self.resultSearchController = ({
+            let controller = UISearchController(searchResultsController: nil)
+            controller.delegate = self
+            controller.searchResultsUpdater = self
+            controller.dimsBackgroundDuringPresentation = false
+            controller.searchBar.sizeToFit()
+            controller.searchBar.delegate = self
+            
+            
+            self.tableView.tableHeaderView = controller.searchBar
+            
+            return controller
+        })()
+
+    }
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-    }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -74,7 +106,14 @@ class MovieTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movieArray.count
+        
+        if (self.resultSearchController.active) {
+            return filteredTableData.count
+        }
+        else {
+            return movieArray.count
+        }
+
     
         //return 0
     }
@@ -83,16 +122,26 @@ class MovieTableViewController: UITableViewController {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell")
-            as UITableViewCell!
         
-        let person = movieArray[indexPath.row]
-        cell.textLabel?.text = person.valueForKey("name") as! String?
-        cell.detailTextLabel?.text = ">>"
-
-        // Configure the cell...
-
-        return cell
+        if (self.resultSearchController.active) {
+            let cell =
+            tableView.dequeueReusableCellWithIdentifier("Cell")
+                as UITableViewCell!
+            let person = filteredTableData[indexPath.row]
+            cell.textLabel?.text = person.valueForKey("fullname") as! String?
+            cell.detailTextLabel?.text = ">>"
+            return cell
+        }
+        else {
+            let cell =
+            tableView.dequeueReusableCellWithIdentifier("Cell")
+                as UITableViewCell!
+            let person = movieArray[indexPath.row]
+            cell.textLabel?.text = person.valueForKey("fullname") as! String?
+            cell.detailTextLabel?.text = ">>"
+            return cell
+        }
+        
     }
     
 
@@ -113,13 +162,19 @@ class MovieTableViewController: UITableViewController {
 
     
     // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle: UITableViewCellEditingStyle,forRowAtIndexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, commitEditingStyle: UITableViewCellEditingStyle,forRowAtIndexPath indexPath: NSIndexPath) {
         
         if editingStyle == .Delete {
             let appDelegate =
             UIApplication.sharedApplication().delegate as! AppDelegate
             let context = appDelegate.managedObjectContext
-            context.deleteObject(movieArray[indexPath.row])
+            if (self.resultSearchController.active) {
+                context.deleteObject(filteredTableData[indexPath.row])
+            }
+            else {
+                context.deleteObject(movieArray[indexPath.row])
+            }
+            
             var error: NSError? = nil
             do {
                 try context.save()
@@ -130,7 +185,7 @@ class MovieTableViewController: UITableViewController {
                 abort()
             }
         }
-
+        
     }
     
 
@@ -144,23 +199,36 @@ class MovieTableViewController: UITableViewController {
 
     
     // MARK: - Navigation
-
+    
+    // 12) Uncomment prepareforseque
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        
-        if segue.identifier == "UpdateMovies" {
+        //13) Uncomment & Change to go to proper record on proper Viewcontroller
+        if segue.identifier == "UpdateMovie" {
             if let destination = segue.destinationViewController as?
                 ViewController {
-                    if let SelectIndex = tableView.indexPathForSelectedRow?.row {
+                    if (self.resultSearchController.active) {
+                        if let SelectIndex = tableView.indexPathForSelectedRow?.row {
+                            let selectedDevice:NSManagedObject = filteredTableData[SelectIndex] as NSManagedObject
+                            destination.moviedb = selectedDevice
+                            resultSearchController.active = false
+                        }
                         
-                        let selectedDevice:NSManagedObject = movieArray[SelectIndex] as NSManagedObject
-                        destination.moviedb = selectedDevice
                     }
+                    else {
+                        if let SelectIndex = tableView.indexPathForSelectedRow?.row {
+                            let selectedDevice:NSManagedObject = movieArray[SelectIndex] as NSManagedObject
+                            destination.moviedb = selectedDevice
+                        }
+                        
+                    }
+                    
             }
         }
     }
     
-
+    
 }

@@ -45,8 +45,8 @@
 		83FD3C7D1BF29B0700CFAED6 /* icon120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon120.png; path = ../icon120.png; sourceTree = "<group>"; };
 		83FD3C7E1BF29B0700CFAED6 /* icon152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon152.png; path = ../icon152.png; sourceTree = "<group>"; };
 		83FD3C7F1BF29B0700CFAED6 /* icon180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon180.png; path = ../icon180.png; sourceTree = "<group>"; };
-		83FFEF371BFA976D002C9FAA /* Movie+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Movie+CoreDataProperties.swift"; path = "../Movie+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		83FFEF381BFA976D002C9FAA /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Movie.swift; path = ../Movie.swift; sourceTree = "<group>"; };
+		83FFEF371BFA976D002C9FAA /* Movie+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Movie+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		83FFEF381BFA976D002C9FAA /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		83FFEF3B1BFAA281002C9FAA /* MovieTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -65,6 +65,8 @@
 			isa = PBXGroup;
 			children = (
 				83FFEF3B1BFAA281002C9FAA /* MovieTableViewController.swift */,
+				83FFEF371BFA976D002C9FAA /* Movie+CoreDataProperties.swift */,
+				83FFEF381BFA976D002C9FAA /* Movie.swift */,
 				83FD3C761BF29AD900CFAED6 /* icons */,
 				838280141BF16DDA0046A7DA /* MoviePhile */,
 				838280131BF16DDA0046A7DA /* Products */,
@@ -88,8 +90,6 @@
 				8382801F1BF16DDA0046A7DA /* Assets.xcassets */,
 				838280211BF16DDA0046A7DA /* LaunchScreen.storyboard */,
 				838280241BF16DDA0046A7DA /* Info.plist */,
-				83FFEF381BFA976D002C9FAA /* Movie.swift */,
-				83FFEF371BFA976D002C9FAA /* Movie+CoreDataProperties.swift */,
 				8382801C1BF16DDA0046A7DA /* Movie.xcdatamodeld */,
 			);
 			path = MoviePhile;

@@ -98,7 +98,7 @@
                     <connections>
                         <outlet property="Title" destination="65P-SI-wnh" id="9BS-wh-mUv"/>
                         <outlet property="btnSave" destination="HBP-to-eh8" id="MzP-JF-RZQ"/>
-                        <outlet property="genre" destination="gtn-nt-zjK" id="C9R-0T-z3x"/>
+                        <outlet property="genre" destination="gtn-nt-zjK" id="nHJ-m1-RBv"/>
                         <outlet property="info" destination="Yzp-zF-952" id="twU-9j-gwN"/>
                         <outlet property="location" destination="uC3-cp-ild" id="wC1-jt-lCD"/>
                         <outlet property="name" destination="65P-SI-wnh" id="WRp-IZ-x0h"/>
