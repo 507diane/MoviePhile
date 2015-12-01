@@ -55,7 +55,7 @@ class MovieTableViewController: UITableViewController,UISearchResultsUpdating, U
             
             } else {
                 
-                print("Could not fetch \(error,) \(error!.userInfo)")
+               // print("Could not fetch \(error,) \(error!.userInfo)")
             }
             
             } catch let error as NSError {
@@ -128,7 +128,7 @@ class MovieTableViewController: UITableViewController,UISearchResultsUpdating, U
             tableView.dequeueReusableCellWithIdentifier("Cell")
                 as UITableViewCell!
             let person = filteredTableData[indexPath.row]
-            cell.textLabel?.text = person.valueForKey("fullname") as! String?
+            cell.textLabel?.text = person.valueForKey("name") as! String?
             cell.detailTextLabel?.text = ">>"
             return cell
         }
@@ -137,7 +137,7 @@ class MovieTableViewController: UITableViewController,UISearchResultsUpdating, U
             tableView.dequeueReusableCellWithIdentifier("Cell")
                 as UITableViewCell!
             let person = movieArray[indexPath.row]
-            cell.textLabel?.text = person.valueForKey("fullname") as! String?
+            cell.textLabel?.text = person.valueForKey("name") as! String?
             cell.detailTextLabel?.text = ">>"
             return cell
         }
@@ -161,9 +161,9 @@ class MovieTableViewController: UITableViewController,UISearchResultsUpdating, U
     
 
     
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle: UITableViewCellEditingStyle,forRowAtIndexPath indexPath: NSIndexPath) {
-        
+    // Override to support editing the table view.
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        //11 Change to delete swiped row
         if editingStyle == .Delete {
             let appDelegate =
             UIApplication.sharedApplication().delegate as! AppDelegate
@@ -187,6 +187,7 @@ class MovieTableViewController: UITableViewController,UISearchResultsUpdating, U
         }
         
     }
+
     
 
     /*
@@ -207,21 +208,24 @@ class MovieTableViewController: UITableViewController,UISearchResultsUpdating, U
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         //13) Uncomment & Change to go to proper record on proper Viewcontroller
-        if segue.identifier == "UpdateMovie" {
+        if segue.identifier == "UpdateMovies" {
             if let destination = segue.destinationViewController as?
                 ViewController {
                     if (self.resultSearchController.active) {
                         if let SelectIndex = tableView.indexPathForSelectedRow?.row {
                             let selectedDevice:NSManagedObject = filteredTableData[SelectIndex] as NSManagedObject
+                           
                             destination.moviedb = selectedDevice
-                            resultSearchController.active = false
+                             resultSearchController.active = false
                         }
                         
                     }
                     else {
                         if let SelectIndex = tableView.indexPathForSelectedRow?.row {
                             let selectedDevice:NSManagedObject = movieArray[SelectIndex] as NSManagedObject
+                         
                             destination.moviedb = selectedDevice
+                             // resultSearchController.active = false
                         }
                         
                     }

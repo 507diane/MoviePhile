@@ -9,29 +9,19 @@
 import UIKit
 import CoreData
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIPickerViewDelegate {
     
     let managedObjectContext = (UIApplication.sharedApplication().delegate
     as! AppDelegate).managedObjectContext
     
     var moviedb:NSManagedObject!
+     let pickerGenre = ["Drama","Mystery","Action","Comedy","Romance","Independent", "Musical"]
+    var colorpicked:String?
+    
+    @IBOutlet weak var mname: UITextField!
     
     
-    @IBOutlet weak var name: UITextField!
-    
-    @IBOutlet weak var genre: UIPickerView! {
-        
-        var pickerData: [String] = [String]()
-        
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            // Do any additional setup after loading the view, typically from a nib.
-            
-            // Input data into the Array:
-            pickerData = ["Drama", "Romance", "Mystery", "Action", "Thriller", "Independant"]
-        }
-    }
-    
+    @IBOutlet weak var genre: UIPickerView!
     
     @IBOutlet weak var year: UITextField!
     
@@ -50,22 +40,22 @@ class ViewController: UIViewController {
         
         if (moviedb != nil)
         {
-            moviedb.setValue(name.text, forKey: "name")
-            moviedb.setValue(genre, forKey: "genre")
-            moviedb.setValue(year, forKey: "year")
-            moviedb.setValue(location, forKey: "location")
-            moviedb.setValue(info, forKey: "info")
+            moviedb.setValue(mname.text, forKey: "name")
+            moviedb.setValue(colorpicked, forKey: "genre")
+            moviedb.setValue(year.text, forKey: "year")
+            moviedb.setValue(location.text, forKey: "location")
+            moviedb.setValue(info.text, forKey: "info")
         }
         else
         {
             let entityDescription =
             NSEntityDescription.entityForName("Movie", inManagedObjectContext: managedObjectContext)
             
-            let movie = Movie(entity: entityDescription!,
+            let movie = MovieMovie(entity: entityDescription!,
             insertIntoManagedObjectContext: managedObjectContext)
             
-            movie.name = name.text
-            movie.genre = genre.text
+            movie.name = mname.text
+            movie.genre = colorpicked
             movie.year = year.text
             movie.location = location.text
             movie.info = info.text
@@ -87,58 +77,49 @@ class ViewController: UIViewController {
         
     }
 
-    @IBAction func btnSearch(sender: UIButton) {
-        
-        let entityDescription =
-        NSEntityDescription.entityForName("Movie", inManagedObjectContext: managedObjectContext)
-        
-        let request = NSFetchRequest()
-        request.entity = entityDescription
-        
-        let pred = NSPredicate(format: "(name = %@)", name.text!)
-        request.predicate = pred
-        
-        var error: NSError?
-        
-        var objects = managedObjectContext?, excecuteFetchRequest(request, error: &error)
-        
-        if let results = objects {
-            if results.count > 0 {
-                let match = results[0] as NSManagedObject
-                
-                name.text = match.valueForKey("name") as String
-                genre.text = match.valueForKey("genre") as String
-                year.text = match.valueForKey("year") as String
-                location.text = match.valueForKey("year") as String
-                info.text = match.valueForKey("status") as String
-                
-            } else {
-                status.text = "No Match"
-            }
-        }
-        
-        
-        
+    
+    //genre
+    var selectedgenre:String!
+    
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 1
     }
     
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerGenre.count
+    }
     
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return pickerGenre[row]
+    }
     
-    
-    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        colorpicked = pickerGenre[row]
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+       
+        genre.delegate = self
+        
         if (moviedb != nil)
         {
-            name.text = moviedb.valueForKey("name") as? String
-            genre.text = moviedb.valueForKey("genre") as? String
+            mname.text = moviedb.valueForKey("name") as? String
+            colorpicked = moviedb.valueForKey("genre") as? String
             year.text = moviedb.valueForKey("year") as? String
             location.text = moviedb.valueForKey("location") as? String
             info.text = moviedb.valueForKey("info") as? String
             btnSave.setTitle("Update Movies", forState: UIControlState.Normal)
+            let SelectedColor:Int = (pickerGenre).indexOf(colorpicked!)!
+            genre.selectRow(SelectedColor,inComponent: 0, animated: true)
         }
-        name.becomeFirstResponder()
+        else
+        {
+             mname.becomeFirstResponder()
+        }
+       
+       
         
         let tap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "Dismiss Keyboard")
         
@@ -148,8 +129,8 @@ class ViewController: UIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
-        
+    }
+    
         override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
             if let touch = touches.first as UITouch! {
                 DismissKeyboard()
@@ -158,8 +139,7 @@ class ViewController: UIViewController {
         }
 
         func DismissKeyboard(){
-            name.endEditing(true)
-            genre.endEditing(true)
+            mname.endEditing(true)
             year.endEditing(true)
             location.endEditing(true)
             info.endEditing(true)
@@ -171,7 +151,23 @@ class ViewController: UIViewController {
         }
         // Dispose of any resources that can be recreated.
     }
-
-
+extension UIWebView {
+    func loadLocalPDF(name:String!) {
+        //load local pdf
+        let termsPath:String? = NSBundle.mainBundle().pathForResource(name, ofType: "pdf")!
+        let url = NSURL(fileURLWithPath: termsPath!)
+        let pdfRequest = NSURLRequest(URL: url)
+        self.loadRequest(pdfRequest)
+    }
+    func loadExternalPDF(name:String!){
+        let url = NSURL(string: name)
+        let request = NSURLRequest(URL:url!)
+        self.scalesPageToFit = true
+        self.loadRequest(request)
+    }
 }
+
+
+
+
 
