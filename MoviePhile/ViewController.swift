@@ -15,7 +15,7 @@ class ViewController: UIViewController, UIPickerViewDelegate {
     as! AppDelegate).managedObjectContext
     
     var moviedb:NSManagedObject!
-     let pickerGenre = ["Drama","Mystery","Action","Comedy","Romance","Independent", "Musical"]
+     let pickerGenre = ["Pick One", "Drama","Mystery","Action","Comedy","Romance","Independent", "Musical"]
     var colorpicked:String?
     
     @IBOutlet weak var mname: UITextField!
